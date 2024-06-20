@@ -1,0 +1,270 @@
+<div class="p-5">
+  <div class="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+  <h2 class="text-5xl font-bold mb-2 text-center">Форма ввода данных</h2>
+    <%= form_for :fds, url: '/fds_params' do |f| %>
+      <!-- ISK, JSK = X, Y; x int [1;144]; y int [1;98] -->
+      <div class="my-4 ">
+        <label class="font-medium leading-6 text-gray-900 block">Координаты выброса:</label>
+        <div class="flex">
+          <div class="mr-6 w-1/2">
+            <label for="x" class="text-gray-700 block">X:</label>
+            <input id="x" name="[fds]x" data-fds-target="x" type="number" value="<%= params[:fds][:x] if params[:fds] %>" placeholder="1-144" required class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <span id="x-error" data-fds-target="xError" class="text-red-500"></span>
+          </div>
+          <div class="mr-6 w-1/2">
+            <label for="y" class="text-gray-700 block">Y:</label>
+            <input id="y" name="[fds]y" type="number" value="<%= params[:fds][:y] if params[:fds] %>" placeholder="1-98" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <span id="y-error" class="text-red-500"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SGryas , AlfG -->
+      <div class="my-4 flex">
+        <!-- SGryas кол-во загрязнения в у.е; double > 0 -->
+        <div class="mr-6 w-1/2">
+          <label for="substance" class="font-medium leading-6 text-gray-900 block">Количество сброшенного вещества:</label>
+          <input id="substance" name="[fds]substance" type="number" value="<%= params[:fds][:substance] if params[:fds] %>" placeholder="> 0.0" step="any" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <span id="substance-error" class="text-red-500"></span>
+        </div>
+
+        <!-- AlfG коэфф диффузии; double > 0 -->
+        <div class="mr-6 w-1/2">
+          <label for="diffusion" class="font-medium leading-6 text-gray-900 block">Коэффициент диффузии:</label>
+          <input id="diffusion" name="[fds]diffusion" type="number" value="<%= params[:fds][:diffusion] if params[:fds] %>" placeholder="> 0.0" step="any" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <span id="diffusion-error" class="text-red-500"></span>
+        </div>
+      </div>
+
+      <!-- tau , itt -->
+      <div class="my-4 flex">
+        <!-- tau ???; double > 0 -->
+        <div class="mr-6 w-1/2">
+          <label for="tau" class="font-medium leading-6 text-gray-900 block">Временной шаг:</label>
+          <input id="tau" name="[fds]tau" type="number" value="<%= params[:fds][:tau] if params[:fds] %>" placeholder="> 0.0" step="any" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <span id="tau-error" class="text-red-500"></span>
+        </div>
+
+        <!-- itt кол-во шагов - итерация; int > 0 -->
+        <div class="mr-6 w-1/2">
+          <label for="time_steps" class="font-medium leading-6 text-gray-900 block">Количество временных шагов:</label>
+          <input id="time_steps" name="[fds]time_steps" type="number" value="<%= params[:fds][:time_steps] if params[:fds] %>" placeholder="> 0" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <span id="time_steps-error" class="text-red-500"></span>
+        </div>
+      </div>
+
+      <!-- hx, hy; x double > 0; y double > 0 -->
+      <div class="my-4">
+        <label class="font-medium leading-6 text-gray-900 block">Дельта:</label>
+        <div class="flex">
+          <div class="mr-6 w-1/2">
+            <label for="hx" class="text-gray-700 block">X:</label>
+            <input id="hx" name="[fds]hx" type="number" value="<%= params[:fds][:hx] if params[:fds] %>" placeholder="> 0.0" step="any" required class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <span id="hx-error" class="text-red-500"></span>
+          </div>
+          <div class="mr-6 w-1/2">
+            <label for="hy" class="text-gray-700 block">Y:</label>
+            <input id="hy" name="[fds]hy" type="number" value="<%= params[:fds][:hy] if params[:fds] %>" placeholder="> 0.0" step="any" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <span id="hy-error" class="text-red-500"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GetVelos , MS  -->
+      <div class="my-4 flex">
+        <!-- GetVelos Веторовая ситуация, = файлик со скростями; double <= 10^(-6) -->
+        <div class="mr-6 w-1/2">
+          <label for="GetVelos" class="font-medium leading-6 text-gray-900 block">Ветровая ситуация:</label>
+          <select id="GetVelos" name="[fds]GetVelos" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+            <option value="w1.res" <%= "selected" if params[:fds] && params[:fds][:GetVelos] == "w1.res" %>>Северо-западный ветер</option>
+            <option value="sht.res" <%= "selected" if params[:fds] && params[:fds][:GetVelos] == "sht.res" %>>Штиль</option>
+            <option value="Out007.res" <%= "selected" if params[:fds] && params[:fds][:GetVelos] == "Out007.res" %>>Северный ветер</option>
+            <option value="Out023.res" <%= "selected" if params[:fds] && params[:fds][:GetVelos] == "Out023.res" %>>Восточный ветер</option>
+            <option value="Out031.res" <%= "selected" if params[:fds] && params[:fds][:GetVelos] == "Out031.res" %>>Юго-восточный ветер</option>
+          </select>
+        </div>
+        <!-- MS метод расчёта на форме; перечисление 1, 2, 3 -->
+        <div class="mr-6 w-1/2">
+          <label for="calculation_method" class="font-medium leading-6 text-gray-900 block">Метод расчета:</label>
+          <select id="calculation_method" name="[fds]calculation_method" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+            <option value="1" <%= "selected" if params[:fds] && params[:fds][:calculation_method] == "1" %>>MNK</option>
+            <option value="2" <%= "selected" if params[:fds] && params[:fds][:calculation_method] == "2" %>>GMRES</option>
+            <option value="3" <%= "selected" if params[:fds] && params[:fds][:calculation_method] == "3" %>>CG</option>
+            <option value="4" <%= "selected" if params[:fds] && params[:fds][:calculation_method] == "4" %>>LSQR</option>
+          </select>
+          <span id="calculation_method-error" class="text-red-500"></span>
+        </div>
+      </div>
+
+      <!-- Shema , alf -->
+      <div class="my-4 flex">
+        <!-- Shema, вид конечно-разностной схемы; Центрально-разностная / Противопотоковая -->
+        <div class="mr-6 w-1/2">
+          <label for="Shema" class="font-medium leading-6 text-gray-900 block">Вид конечно-разностной схемы:</label>
+          <select id="Shema" name="[fds]Shema" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+            <option value="1" <%= "selected" if params[:fds] && params[:fds][:Shema] == "1" %>>Центрально-разностная</option>
+            <option value="2" <%= "selected" if params[:fds] && params[:fds][:Shema] == "2" %>>Противопотоковая</option>
+          </select>
+        </div>
+        <!-- alf вид вычислительной схемы; перечисление 1, 2, 3, 4, 5 -->
+        <div class="mr-6 w-1/2">
+          <label for="wind_condition" class="font-medium leading-6 text-gray-900 block">Вид вычислительной схемы:</label>
+          <select id="wind_condition" name="[fds]wind_condition" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+            <option value="0" <%= "selected" if params[:fds] && params[:fds][:wind_condition] == "0" %>>0</option>
+            <option value="1" <%= "selected" if params[:fds] && params[:fds][:wind_condition] == "1" %>>1</option>
+            <option value="2" <%= "selected" if params[:fds] && params[:fds][:wind_condition] == "2" %>>2</option>
+            <option value="3" <%= "selected" if params[:fds] && params[:fds][:wind_condition] == "3" %>>3</option>
+            <option value="4" <%= "selected" if params[:fds] && params[:fds][:wind_condition] == "4" %>>4</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- WKoef , c_coef -->
+      <div class="my-4 flex">
+        <!-- c_coef постоянный или переменный коэф диффузии true/false -->
+        <div class="mr-6 w-1/2">
+          <label class="font-medium leading-6 text-gray-900 block">Тип коэффициента:</label>
+          <div class="flex items-center gap-4">
+            <label for="variable_coefficient">
+              <input id="variable_coefficient" name="[fds]const_or_var_diff_coeff" type="radio" value="T" checked class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" <%="checked" if params[:fds] && params[:fds][:const_or_var_diff_coeff] == "variable" %>>
+              <span class="my-4">Переменный</span>
+            </label>
+            <label for="constant_coefficient">
+              <input id="constant_coefficient" name="[fds]const_or_var_diff_coeff" type="radio" value="F" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" <%="checked" if params[:fds] && params[:fds][:const_or_var_diff_coeff] == "constant" %>>
+              <span class="my-4">Постоянный</span>
+            </label>
+          </div>
+        </div>
+        <!-- WKoef домножения скоростей в водоёме; double > 0 -->
+        <div class="mr-6 w-1/2">
+          <label for="speedx" class="font-medium leading-6 text-gray-900 block">Коэффициент домножения скоростей:</label>
+          <input id="speedx" name="[fds]speedx" type="number" value="<%= params[:fds][:speedx] if params[:fds] %>" placeholder="> 0.0" step="any" required class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <span id="speedx-error" class="text-red-500"></span>
+        </div>
+      </div>
+
+      <!-- new_file , GetS_K -->
+      <div class="my-4 flex">
+        <!-- new_file новый файл для рассчетов или нет; true/false -->
+        <div class="mr-6 w-1/2">
+          <label class="font-medium leading-6 text-gray-900 block">Продолжить рассчёт?</label>
+          <div class="flex items-center gap-4">
+            <label for="new_file">
+              <input id="new_file" name="[fds]new_or_old_file" type="radio" value="T" checked class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" >
+              <span class="my-4">Нет, новый файл</span>
+            </label>
+            <label for="old_file">
+              <input id="old_file" name="[fds]new_or_old_file" type="radio" value="F" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" >
+              <span class="my-4">Да</span>
+            </label>
+          </div>
+        </div>
+        <!-- GetS_K название файла для продолжения рассчета; перечисление файлов -->
+        <div class="mr-6 w-1/2" id="file_name_container">
+          <label for="file_name" class="font-medium leading-6 text-gray-900 block">Файл для продолжения расчета:</label>
+          <select id="file_name" name="[fds]file_name" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
+            <% Dir.glob("./vendor/FDM/Data/*.res").each do |file| %>
+              <% if file.match(/S_K_.+/) && !file.match(/Anim/) %>
+                <option value="<%= file %>" <%= "selected" if params[:fds] && params[:fds][:file_name] == file %>>
+                  <%= File.basename(file) %>
+                </option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+      </div>
+
+      <!-- Кнопка запуска на счет -->
+      <div class="flex justify-center gap-5" id="submit" data-fds-target="submitButton">
+        <%= submit_tag 'Запуск на счет', class: "h-12 flex justify-center items-center rounded-md border border-transparent bg-indigo-600 py-1.5 px-4 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+                       data: { fds_target: "submitButton" } %>
+      </div>
+    <% end %>
+
+    <!--Валидация-->
+    <script>
+        var formFields = {
+            x: { input: document.getElementById('x'), error: document.getElementById('x-error'), validate: value => value >= 1 && value <= 144, errorMsg: 'Значение должно быть в диапазоне от 1 до 144' },
+            y: { input: document.getElementById('y'), error: document.getElementById('y-error'), validate: value => value >= 1 && value <= 98, errorMsg: 'Значение должно быть в диапазоне от 1 до 98' },
+            substance: { input: document.getElementById('substance'), error: document.getElementById('substance-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            diffusion: { input: document.getElementById('diffusion'), error: document.getElementById('diffusion-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            tau: { input: document.getElementById('tau'), error: document.getElementById('tau-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            time_steps: { input: document.getElementById('time_steps'), error: document.getElementById('time_steps-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            hx: { input: document.getElementById('hx'), error: document.getElementById('hx-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            hy: { input: document.getElementById('hy'), error: document.getElementById('hy-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+            speedx: { input: document.getElementById('speedx'), error: document.getElementById('speedx-error'), validate: value => value > 0, errorMsg: 'Значение должно быть больше 0' },
+        };
+
+        var submitButton = document.querySelector('input[type="submit"]');
+
+        function validateField(field) {
+            var value = field.input instanceof NodeList ?
+                Array.from(field.input).find(input => input.checked)?.value :
+                field.input.value.trim(); // Добавляем .trim(), чтобы игнорировать пробелы
+
+            // Проверяем, заполнено ли поле
+            if (value === '') {
+                field.error.textContent = ''; // Если поле пустое, убираем сообщение об ошибке
+                return true; // Возвращаем true, чтобы поле считалось валидным
+            }
+
+            // Продолжаем проверку только если поле не пустое
+            if (!field.validate(value)) {
+                field.error.textContent = field.errorMsg;
+                return false;
+            } else {
+                field.error.textContent = '';
+                return true;
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            Object.values(formFields).forEach(field => {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
+
+        Object.values(formFields).forEach(field => {
+            if (field.input instanceof NodeList) {
+                field.input.forEach(input => input.addEventListener('change', () => {
+                    validateField(field);
+                    submitButton.disabled = !validateForm();
+                }));
+            } else {
+                field.input.addEventListener('input', () => {
+                    validateField(field);
+                    submitButton.disabled = !validateForm();
+                });
+            }
+        });
+
+        validateForm();
+    </script>
+
+    <!--Заполнение старыми значениями-->
+    <script>
+        let formData = {};
+        const form =document.querySelector('form');
+        const LS = localStorage;
+
+        // получить данные из input
+        form.addEventListener('input',function(event){
+            formData[event.target.name]= event.target.value;
+            LS.setItem('formData',JSON.stringify(formData));
+        });
+
+        // восстановить
+        if(LS.getItem('formData')) {
+            formData = JSON.parse(LS.getItem('formData'));
+            for (let key in formData) {
+                form.elements[key].value = formData[key];
+            }
+        }
+    </script>
+
+  </div>
+</div>

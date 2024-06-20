@@ -1,0 +1,16 @@
+<div class="p-5 max-w-full">
+  <h1 class="text-3xl font-bold mb-6 text-center">Результаты вычислений</h1>
+
+  <div class="flex justify-between">
+    <% @numeric_result.images.each do |image| %>
+      <div class="w-1/3 text-center">
+        <%= image_tag(image.url, :alt => "Image") %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-4">
+    <p>Файл для скачивания: <%= link_to @numeric_result.solution.filename, @numeric_result.solution.url, style: 'color: blue; text-decoration: underline;', remote: true %></p>
+  </div>
+
+</div>
